@@ -26,9 +26,13 @@ public class IndexServlet extends HttpServlet {
         try (Connection conn = DatabaseConnection.getConnection()) {
 
             // ========= 1. LẤY 9 SẢN PHẨM MỚI NHẤT (Đã đúng) =========
-            String sqlNew = "SELECT MaSP, CodeSP, TenSP, Gia, HinhAnh " +
-                            "FROM SanPham " +
-                            "ORDER BY MaSP DESC LIMIT 9";
+            String sqlNew = """
+                            SELECT MaSP, CodeSP, TenSP, Gia, HinhAnh 
+                            FROM SanPham 
+                            WHERE DaXoa = 0
+                            ORDER BY MaSP DESC LIMIT 9
+                                                      """;
+                    
 
             try (PreparedStatement stmt = conn.prepareStatement(sqlNew);
                  ResultSet rs = stmt.executeQuery()) {
@@ -53,8 +57,7 @@ public class IndexServlet extends HttpServlet {
                               "WHERE km.NgayBatDau <= CURDATE() " +
                               "  AND km.NgayKetThuc >= CURDATE() " +
                             // "  AND km.TrangThai = 1 " + // ✅ SỬA LỖI 2: Xóa dòng này vì cột không tồn tại
-                              "ORDER BY km.PhanTramGiam DESC, sp.MaSP DESC " +
-                              "LIMIT 10";
+                              "ORDER BY km.PhanTramGiam DESC, sp.MaSP DESC " ;
 
             try (PreparedStatement stmt = conn.prepareStatement(sqlPromo);
                  ResultSet rs = stmt.executeQuery()) {

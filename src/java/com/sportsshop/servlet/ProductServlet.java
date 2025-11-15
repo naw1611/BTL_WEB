@@ -31,9 +31,9 @@ public class ProductServlet extends HttpServlet {
             "LEFT JOIN KhuyenMai km ON sp.MaKM = km.MaKM " + // JOIN 2 bảng
             "    AND km.NgayBatDau <= CURDATE() " + // Điều kiện KM còn hạn
             "    AND km.NgayKetThuc >= CURDATE() " +
-            "WHERE 1=1" // Bắt đầu lọc
+            "WHERE 1=1 AND sp.DaXoa = 0" // Bắt đầu lọc
         );
-        StringBuilder countSql = new StringBuilder("SELECT COUNT(*) FROM SanPham WHERE 1=1");
+        StringBuilder countSql = new StringBuilder("SELECT COUNT(*) FROM SanPham WHERE 1=1 AND DaXoa = 0");
         List<Object> params = new ArrayList<>();
 
         if (search != null && !search.trim().isEmpty()) {

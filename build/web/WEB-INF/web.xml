@@ -126,6 +126,64 @@
         <url-pattern>/contact</url-pattern>
     </servlet-mapping>
 
+    <!-- ✅ Admin quản lý sản phẩm -->
+    <servlet>
+        <servlet-name>AdminProductServlet</servlet-name>
+        <servlet-class>com.sportsshop.servlet.AdminProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminProductServlet</servlet-name>
+        <url-pattern>/adminProduct</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+    <servlet-name>AdminUserServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.AdminUserServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>AdminUserServlet</servlet-name>
+    <url-pattern>/adminUser</url-pattern>
+</servlet-mapping>
+
+    <servlet>
+    <servlet-name>AdminCategoryServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.AdminCategoryServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>AdminCategoryServlet</servlet-name>
+    <url-pattern>/adminCategory</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>AdminReportServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.AdminReportServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>AdminReportServlet</servlet-name>
+    <url-pattern>/adminReport</url-pattern>
+</servlet-mapping>
+
+    <servlet>
+    <servlet-name>AdminKhuyenMaiServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.AdminKhuyenMaiServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>AdminKhuyenMaiServlet</servlet-name>
+    <url-pattern>/adminKhuyenMai</url-pattern>
+</servlet-mapping>
+
+    <servlet>
+    <servlet-name>AdminContactServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.AdminContactServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>AdminContactServlet</servlet-name>
+    <url-pattern>/adminContact</url-pattern>
+</servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>

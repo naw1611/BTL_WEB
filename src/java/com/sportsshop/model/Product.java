@@ -9,6 +9,15 @@ public class Product {
     private String moTa;
     private int maDanhMuc;
     private int soLuong;
+    private int maKM;
+
+    public int getMaKM() {
+        return maKM;
+    }
+
+    public void setMaKM(int maKM) {
+        this.maKM = maKM;
+    }
 
     // === THÊM 2 FIELD MỚI CHO KHUYẾN MÃI ===
     private int phanTramGiam = 0;        // % giảm giá (0 = không khuyến mại)

@@ -8,16 +8,13 @@
     <hr>
 
     <div class="order-detail">
-        <!-- PHẦN 1: THÔNG TIN NGƯỜI NHẬN -->
         <div class="row" style="margin-bottom: 20px;">
             <div class="col-md-6">
                 <h4>Thông tin người nhận</h4>
                 <p><strong>Khách Hàng:</strong> ${order.user.fullName}</p>
                 <p><strong>Email:</strong> ${order.user.email}</p>
+                <p><strong>SĐT:</strong> ${order.user.soDienThoai}</p>
                 <p><strong>Địa Chỉ Giao:</strong> ${order.diaChiGiao}</p>
-                <c:if test="${not empty order.sdt}">
-                    <p><strong>Điện thoại:</strong> ${order.sdt}</p>
-                </c:if>
             </div>
 
             <div class="col-md-6">
@@ -33,69 +30,54 @@
             </div>
         </div>
 
-        <hr>
-
-        <!-- PHẦN 2: CẬP NHẬT (ADMIN) -->
         <c:if test="${sessionScope.user.role == 'admin'}">
             <div style="background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 25px;">
-                <form action="admin" method="post" class="form-inline">
+                <form action="admin" method="post">
                     <input type="hidden" name="action" value="updateStatus">
                     <input type="hidden" name="maDon" value="${order.maDon}">
-                    <label for="status" class="mr-2"><strong>Cập Nhật Trạng Thái:</strong></label>
-                    <select id="status" name="status" class="form-control mr-2" required>
+                    <label><strong>Cập nhật trạng thái:</strong></label>
+                    <select name="status" required>
                         <option value="Đang xử lý" <c:if test="${order.trangThai == 'Đang xử lý'}">selected</c:if>>Đang xử lý</option>
-                        <option value="Đang giao" <c:if test="${order.trangThai == 'Đang giao'}">selected</c:if>>Đang giao</option>
-                        <option value="Đã giao" <c:if test="${order.trangThai == 'Đã giao'}">selected</c:if>>Đã giao</option>
+                        <option value="Đang giao hàng" <c:if test="${order.trangThai == 'Đang giao hàng'}">selected</c:if>>Đang giao hàng</option>
+                        <option value="Đã giao hàng" <c:if test="${order.trangThai == 'Đã giao hàng'}">selected</c:if>>Đã giao hàng</option>
                         <option value="Đã hủy" <c:if test="${order.trangThai == 'Đã hủy'}">selected</c:if>>Đã hủy</option>
                     </select>
-                    <button type="submit" class="btn btn-success">Cập Nhật</button>
+                    <button type="submit">Cập nhật</button>
                 </form>
 
-                <!-- Hiển thị thông báo -->
                 <c:if test="${param.success == '1'}">
-                    <p class="alert alert-success mt-2">✅ Cập nhật trạng thái thành công!</p>
+                    <p style="color: green;">✅ Cập nhật trạng thái thành công!</p>
                 </c:if>
                 <c:if test="${param.error == '1'}">
-                    <p class="alert alert-danger mt-2">❌ Có lỗi xảy ra khi cập nhật trạng thái!</p>
+                    <p style="color: red;">❌ Có lỗi xảy ra khi cập nhật!</p>
                 </c:if>
             </div>
         </c:if>
 
-        <!-- PHẦN 3: BẢNG SẢN PHẨM -->
         <h3>Sản Phẩm Trong Đơn Hàng</h3>
-        <table class="table table-bordered table-hover">
-            <thead class="thead-light">
+        <table border="1" cellspacing="0" cellpadding="8" style="width:100%; border-collapse:collapse;">
+            <tr>
+                <th>Hình Ảnh</th>
+                <th>Sản Phẩm</th>
+                <th>Giá</th>
+                <th>Số Lượng</th>
+                <th>Tổng</th>
+            </tr>
+            <c:forEach var="item" items="${orderDetails}">
                 <tr>
-                    <th>Hình Ảnh</th>
-                    <th>Sản Phẩm</th>
-                    <th>Giá</th>
-                    <th>Số Lượng</th>
-                    <th>Tổng</th>
+                    <td><img src="${pageContext.request.contextPath}/images/${item.product.hinhAnh}" width="80"></td>
+                    <td>${item.product.tenSP} (${item.product.codeSP})</td>
+                    <td><fmt:formatNumber value="${item.donGia}" type="number"/> VNĐ</td>
+                    <td>${item.soLuong}</td>
+                    <td><fmt:formatNumber value="${item.donGia * item.soLuong}" type="number"/> VNĐ</td>
                 </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="item" items="${orderDetails}">
-                    <tr>
-                        <td><img src="${pageContext.request.contextPath}/images/${item.product.hinhAnh}"
-                                 alt="${item.product.tenSP}"
-                                 style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;"></td>
-                        <td>${item.product.tenSP} (${item.product.codeSP})</td>
-                        <td><fmt:formatNumber value="${item.donGia}" type="number"/> VNĐ</td>
-                        <td>${item.soLuong}</td>
-                        <td><fmt:formatNumber value="${item.donGia * item.soLuong}" type="number"/> VNĐ</td>
-                    </tr>
-                </c:forEach>
-            </tbody>
+            </c:forEach>
         </table>
 
-        <!-- Nút quay lại -->
-        <c:if test="${sessionScope.user.role == 'admin'}">
-            <button onclick="window.print()" class="btn btn-secondary">In Đơn Hàng</button>
-            <a href="admin" class="btn btn-primary">Quay lại (Admin)</a>
-        </c:if>
-        <c:if test="${sessionScope.user.role != 'admin'}">
-            <a href="order?action=view" class="btn btn-primary">Quay lại đơn hàng của tôi</a>
-        </c:if>
+        <div style="margin-top: 20px;">
+            <a href="admin?action=print&maDon=${order.maDon}" target="_blank">🖨 In đơn hàng</a> |
+            <a href="admin">⬅ Quay lại</a>
+        </div>
     </div>
 </div>
 
