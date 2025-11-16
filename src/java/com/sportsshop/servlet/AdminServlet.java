@@ -72,54 +72,73 @@ request.setAttribute("listDanhMuc", listDanhMuc);
     }
 
     private void listOrders(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        List<Order> orders = new ArrayList<>();
+        throws ServletException, IOException {
+    List<Order> orders = new ArrayList<>();
 
-        String orderId = request.getParameter("orderId");
-        String customerName = request.getParameter("customerName");
-        String fromDate = request.getParameter("fromDate");
-        String toDate = request.getParameter("toDate");
+    String orderId = request.getParameter("orderId");
+    String customerName = request.getParameter("customerName");
+    String fromDate = request.getParameter("fromDate");
+    String toDate = request.getParameter("toDate");
 
-        StringBuilder sql = new StringBuilder(
-                "SELECT d.MaDon, d.NgayDat, d.TongTien, d.DiaChiGiao, d.TrangThai, " +
-                        "u.MaUser, u.FullName, u.Email, u.SoDienThoai " +
-                        "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser WHERE 1=1 ");
+    List<Object> params = new ArrayList<>();
+    StringBuilder sql = new StringBuilder(
+            "SELECT d.MaDon, d.NgayDat, d.TongTien, d.DiaChiGiao, d.TrangThai, " +
+                    "u.MaUser, u.FullName, u.Email, u.SoDienThoai " +
+                    "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser WHERE 1=1 ");
 
-        if (orderId != null && !orderId.isEmpty()) sql.append(" AND d.MaDon = ").append(orderId);
-        if (customerName != null && !customerName.isEmpty()) sql.append(" AND u.FullName LIKE '%").append(customerName).append("%'");
-        if (fromDate != null && !fromDate.isEmpty()) sql.append(" AND d.NgayDat >= '").append(fromDate).append(" 00:00:00'");
-        if (toDate != null && !toDate.isEmpty()) sql.append(" AND d.NgayDat <= '").append(toDate).append(" 23:59:59'");
-        sql.append(" ORDER BY d.MaDon DESC");
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Order order = new Order();
-                order.setMaDon(rs.getInt("MaDon"));
-                order.setNgayDat(rs.getTimestamp("NgayDat"));
-                order.setTongTien(rs.getDouble("TongTien"));
-                order.setDiaChiGiao(rs.getString("DiaChiGiao"));
-                order.setTrangThai(rs.getString("TrangThai"));
-
-                User user = new User();
-                user.setMaUser(rs.getInt("MaUser"));
-                user.setFullName(rs.getString("FullName"));
-                user.setEmail(rs.getString("Email"));
-                user.setSoDienThoai(rs.getString("SoDienThoai"));
-                order.setUser(user);
-
-                orders.add(order);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("message", "Lỗi khi lấy danh sách đơn hàng!");
-            request.setAttribute("messageType", "error");
-        }
-
-        request.setAttribute("orders", orders);
-        request.getRequestDispatcher("jsp/admin.jsp").forward(request, response);
+    if (orderId != null && !orderId.isEmpty()) {
+        sql.append(" AND d.MaDon = ?");
+        params.add(Integer.parseInt(orderId));
     }
+    if (customerName != null && !customerName.isEmpty()) {
+        sql.append(" AND u.FullName LIKE ?");
+        params.add("%" + customerName + "%");
+    }
+    if (fromDate != null && !fromDate.isEmpty()) {
+        sql.append(" AND d.NgayDat >= ?");
+        params.add(fromDate + " 00:00:00");
+    }
+    if (toDate != null && !toDate.isEmpty()) {
+        sql.append(" AND d.NgayDat <= ?");
+        params.add(toDate + " 23:59:59");
+    }
+    sql.append(" ORDER BY d.MaDon DESC");
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        
+        // Gán parameters
+        for (int i = 0; i < params.size(); i++) {
+            stmt.setObject(i + 1, params.get(i));
+        }
+        
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Order order = new Order();
+            order.setMaDon(rs.getInt("MaDon"));
+            order.setNgayDat(rs.getTimestamp("NgayDat"));
+            order.setTongTien(rs.getDouble("TongTien"));
+            order.setDiaChiGiao(rs.getString("DiaChiGiao"));
+            order.setTrangThai(rs.getString("TrangThai"));
+
+            User user = new User();
+            user.setMaUser(rs.getInt("MaUser"));
+            user.setFullName(rs.getString("FullName"));
+            user.setEmail(rs.getString("Email"));
+            user.setSoDienThoai(rs.getString("SoDienThoai"));
+            order.setUser(user);
+
+            orders.add(order);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("message", "Lỗi khi lấy danh sách đơn hàng: " + e.getMessage());
+        request.setAttribute("messageType", "error");
+    }
+
+    request.setAttribute("orders", orders);
+    request.getRequestDispatcher("jsp/admin.jsp").forward(request, response);
+}
 
     private void showOrderDetail(HttpServletRequest request, HttpServletResponse response, String action)
             throws ServletException, IOException {
@@ -191,17 +210,16 @@ request.setAttribute("listDanhMuc", listDanhMuc);
 
     private void exportExcel(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
-    // Lấy các tham số lọc từ request
     String orderId = request.getParameter("orderId");
     String customerName = request.getParameter("customerName");
     String fromDate = request.getParameter("fromDate");
     String toDate = request.getParameter("toDate");
 
     List<Object> params = new ArrayList<>();
-    // Câu lệnh SQL phải JOIN để lấy FullName (nếu cần lọc theo customerName)
     StringBuilder sql = new StringBuilder(
             "SELECT d.MaDon, u.FullName, d.NgayDat, d.TongTien, d.TrangThai, d.DiaChiGiao " +
-            "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser WHERE 1=1 ");
+            "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser " +
+            "WHERE d.TrangThai != 'Đã hủy' "); // ✅ THÊM ĐIỀU KIỆN NÀY
 
     if (orderId != null && !orderId.isEmpty()) {
         sql.append(" AND d.MaDon = ?");
@@ -224,7 +242,6 @@ request.setAttribute("listDanhMuc", listDanhMuc);
     try (Connection conn = DatabaseConnection.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
         
-        // Gán các tham số
         for (int i = 0; i < params.size(); i++) {
             stmt.setObject(i + 1, params.get(i));
         }
@@ -235,7 +252,6 @@ request.setAttribute("listDanhMuc", listDanhMuc);
         Sheet sheet = workbook.createSheet("DanhSachDonHang");
         Row header = sheet.createRow(0);
         
-        // Thêm cột "Tên Khách Hàng" vì đã JOIN
         String[] headers = {"Mã Đơn", "Tên Khách Hàng", "Ngày Đặt", "Tổng Tiền", "Trạng Thái", "Địa Chỉ Giao"};
         for (int i = 0; i < headers.length; i++) {
             header.createCell(i).setCellValue(headers[i]);
@@ -245,7 +261,7 @@ request.setAttribute("listDanhMuc", listDanhMuc);
         while (rs.next()) {
             Row row = sheet.createRow(rowIndex++);
             row.createCell(0).setCellValue(rs.getInt("MaDon"));
-            row.createCell(1).setCellValue(rs.getString("FullName")); // Cột mới
+            row.createCell(1).setCellValue(rs.getString("FullName"));
             row.createCell(2).setCellValue(rs.getTimestamp("NgayDat").toString());
             row.createCell(3).setCellValue(rs.getDouble("TongTien"));
             row.createCell(4).setCellValue(rs.getString("TrangThai"));
@@ -259,6 +275,8 @@ request.setAttribute("listDanhMuc", listDanhMuc);
         
     } catch (Exception e) {
         e.printStackTrace();
+        response.setContentType("text/html; charset=UTF-8");
+        response.getWriter().println("<script>alert('Lỗi xuất Excel: " + e.getMessage() + "'); window.history.back();</script>");
     }
 }
 
@@ -266,7 +284,6 @@ request.setAttribute("listDanhMuc", listDanhMuc);
     response.setContentType("application/pdf");
     response.setHeader("Content-Disposition", "attachment; filename=DonHang.pdf");
 
-    // ✅ Lấy các tham số tìm kiếm
     String orderId = request.getParameter("orderId");
     String customerName = request.getParameter("customerName");
     String fromDate = request.getParameter("fromDate");
@@ -274,10 +291,10 @@ request.setAttribute("listDanhMuc", listDanhMuc);
 
     Document document = new Document(PageSize.A4);
     
-    // ✅ Xây dựng câu SQL động giống như listOrders
     StringBuilder sql = new StringBuilder(
             "SELECT d.MaDon, d.NgayDat, d.TongTien, d.TrangThai, d.DiaChiGiao, u.FullName " +
-            "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser WHERE 1=1 ");
+            "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser " +
+            "WHERE d.TrangThai != 'Đã hủy' "); // ✅ THÊM ĐIỀU KIỆN NÀY
 
     List<Object> params = new ArrayList<>();
 
@@ -303,7 +320,6 @@ request.setAttribute("listDanhMuc", listDanhMuc);
          Connection conn = DatabaseConnection.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
 
-        // ✅ Set parameters
         for (int i = 0; i < params.size(); i++) {
             stmt.setObject(i + 1, params.get(i));
         }
@@ -312,18 +328,23 @@ request.setAttribute("listDanhMuc", listDanhMuc);
         PdfWriter.getInstance(document, out);
         document.open();
 
-        // ✅ Load font Unicode
         String fontPath = getServletContext().getRealPath("/WEB-INF/fonts/times.ttf");
-        BaseFont bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        BaseFont bf;
+        
+        if (fontPath != null && new java.io.File(fontPath).exists()) {
+            bf = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        } else {
+            bf = BaseFont.createFont("C:\\Windows\\Fonts\\Times New Roman\\times.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        }
+        
         Font fontTitle = new Font(bf, 14, Font.BOLD);
         Font fontNormal = new Font(bf, 11);
         Font fontHeader = new Font(bf, 12, Font.BOLD);
 
-        // Tiêu đề
         document.add(new Paragraph("BÁO CÁO ĐƠN HÀNG", fontTitle));
         document.add(new Paragraph("Ngày tạo: " + new java.util.Date(), fontNormal));
+        document.add(new Paragraph("(Không bao gồm đơn đã hủy)", fontNormal)); // ✅ GHI CHÚ
         
-        // ✅ Hiển thị điều kiện tìm kiếm
         if (orderId != null && !orderId.isEmpty()) {
             document.add(new Paragraph("Mã đơn: " + orderId, fontNormal));
         }
@@ -339,7 +360,6 @@ request.setAttribute("listDanhMuc", listDanhMuc);
         
         document.add(Chunk.NEWLINE);
 
-        // Bảng dữ liệu
         PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100);
         table.setWidths(new float[]{8, 20, 20, 18, 15, 19});
@@ -352,7 +372,6 @@ request.setAttribute("listDanhMuc", listDanhMuc);
             table.addCell(cell);
         }
 
-        // ✅ Đếm số lượng và tổng tiền
         int count = 0;
         double totalAmount = 0;
 
@@ -371,7 +390,6 @@ request.setAttribute("listDanhMuc", listDanhMuc);
 
         document.add(table);
         
-        // ✅ Thêm thống kê
         document.add(Chunk.NEWLINE);
         document.add(new Paragraph("Tổng số đơn hàng: " + count, fontHeader));
         document.add(new Paragraph("Tổng doanh thu: " + String.format("%,.0f đ", totalAmount), fontHeader));
@@ -381,6 +399,8 @@ request.setAttribute("listDanhMuc", listDanhMuc);
 
     } catch (Exception e) {
         e.printStackTrace();
+        response.setContentType("text/html; charset=UTF-8");
+        response.getWriter().println("<script>alert('Lỗi xuất PDF: " + e.getMessage() + "'); window.history.back();</script>");
     }
 }
     @Override

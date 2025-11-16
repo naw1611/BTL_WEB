@@ -32,6 +32,44 @@
         <url-pattern>/index</url-pattern>
     </servlet-mapping>
 
+    <!-- PROFILE SERVLET -->
+<servlet>
+    <servlet-name>ProfileServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.ProfileServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>ProfileServlet</servlet-name>
+    <url-pattern>/profile</url-pattern>
+</servlet-mapping>
+
+<!-- Thêm các servlet mapping -->
+<servlet>
+    <servlet-name>ForgotPasswordServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.ForgotPasswordServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>ForgotPasswordServlet</servlet-name>
+    <url-pattern>/forgotPassword</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>VerifyCodeServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.VerifyCodeServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>VerifyCodeServlet</servlet-name>
+    <url-pattern>/verifyCode</url-pattern>
+</servlet-mapping>
+
+<servlet>
+    <servlet-name>ResetPasswordServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.ResetPasswordServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>ResetPasswordServlet</servlet-name>
+    <url-pattern>/resetPassword</url-pattern>
+</servlet-mapping>
+
     <servlet>
         <servlet-name>ProductServlet</servlet-name>
         <servlet-class>com.sportsshop.servlet.ProductServlet</servlet-class>
@@ -49,6 +87,25 @@
         <servlet-name>ProductDetailServlet</servlet-name>
         <url-pattern>/product-detail</url-pattern>
     </servlet-mapping>
+    
+    <!-- REVIEW -->
+    <servlet>
+        <servlet-name>ReviewServlet</servlet-name>
+        <servlet-class>com.sportsshop.servlet.ReviewServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReviewServlet</servlet-name>
+        <url-pattern>/review</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+    <servlet-name>AdminReplyReviewServlet</servlet-name>
+    <servlet-class>com.sportsshop.servlet.AdminReplyReviewServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+    <servlet-name>AdminReplyReviewServlet</servlet-name>
+    <url-pattern>/adminReplyReview</url-pattern>
+</servlet-mapping>
 
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>

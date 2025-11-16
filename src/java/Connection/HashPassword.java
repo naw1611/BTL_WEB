@@ -8,7 +8,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class HashPassword {
     public static void main(String[] args) {
-        String password = "admin@123";
+        String password = "nam12345";
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
         
         System.out.println("Password gốc: " + password);

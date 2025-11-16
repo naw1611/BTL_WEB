@@ -3,8 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/src/java/com/sportsshop/util/EmailUtil.java</file>
-            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/src/java/email.properties</file>
+            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/web/jsp/login.jsp</file>
+            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/src/java/com/sportsshop/servlet/ForgotPasswordServlet.java</file>
+            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/web/jsp/verifyCode.jsp</file>
+            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/src/java/com/sportsshop/servlet/VerifyCodeServlet.java</file>
+            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/src/java/com/sportsshop/servlet/ResetPasswordServlet.java</file>
+            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/web/jsp/resetPassword.jsp</file>
+            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/web/WEB-INF/web.xml</file>
+            <file>file:/D:/Apache%20Netbeans/BAI_TAP_LON_WEB/nbproject/build-impl.xml</file>
         </group>
     </open-files>
 </project-private>

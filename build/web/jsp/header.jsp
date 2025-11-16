@@ -23,8 +23,10 @@
                 <c:choose>
                     <c:when test="${not empty sessionScope.user}">
                         <li class="user-greeting">
-                            <a href="#"><i class="fas fa-user"></i> Chào, <strong>${sessionScope.user.fullName}</strong></a>
-                        </li>
+    <a href="<%= request.getContextPath() %>/profile">
+        <i class="fas fa-user"></i> Chào, <strong>${sessionScope.user.fullName}</strong>
+    </a>
+</li>
                         
                         <c:if test="${sessionScope.user.role == 'user'}">
                         <li><a href="<%= request.getContextPath() %>/contact"><i class="fas fa-envelope"></i> Liên Hệ</a></li>
