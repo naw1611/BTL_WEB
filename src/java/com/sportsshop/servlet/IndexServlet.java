@@ -57,7 +57,7 @@ public class IndexServlet extends HttpServlet {
                               "WHERE km.NgayBatDau <= CURDATE() " +
                               "  AND km.NgayKetThuc >= CURDATE() " +
                             // "  AND km.TrangThai = 1 " + // ✅ SỬA LỖI 2: Xóa dòng này vì cột không tồn tại
-                              "ORDER BY km.PhanTramGiam DESC, sp.MaSP DESC " ;
+                              "ORDER BY km.PhanTramGiam DESC, sp.MaSP DESC LIMIT 9" ;
 
             try (PreparedStatement stmt = conn.prepareStatement(sqlPromo);
                  ResultSet rs = stmt.executeQuery()) {

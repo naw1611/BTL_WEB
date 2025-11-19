@@ -187,6 +187,35 @@
                     </select>
                 </div>
 
+                <!-- PHẦN HIỂN THỊ KHI CHỌN CHUYỂN KHOẢN -->
+<div id="bankTransferInfo" style="display:none; margin-top:20px; padding:20px; background:#f8f9fa; border-radius:10px; border:1px solid #e9ecef;">
+    <h4 style="margin-top:0; color:#0066cc;">Thông tin chuyển khoản</h4>
+    <div style="display:flex; gap:20px; flex-wrap:wrap; font-size:0.95em;">
+        <div style="flex:1; min-width:200px;">
+            <p><strong>Ngân hàng:</strong> Vietcombank</p>
+            <p><strong>Số tài khoản:</strong> <span style="font-family:monospace; background:#eee; padding:2px 6px; border-radius:4px;">1234 5678 9012</span></p>
+            <p><strong>Chủ tài khoản:</strong> NGUYỄN VĂN A</p>
+        </div>
+        <div style="flex:1; min-width:200px;">
+            <p><strong>Nội dung chuyển khoản:</strong></p>
+            <p style="font-family:monospace; background:#fff3cd; padding:8px; border-radius:6px; border:1px solid #ffeaa7; font-weight:bold;" id="maDonContent">
+                DH20251116123456
+            </p>
+            <small style="color:#e74c3c;">Vui lòng ghi đúng nội dung để xác nhận nhanh</small>
+        </div>
+    </div>
+
+    <div style="margin-top:20px;">
+        <label style="display:block; margin-bottom:8px; font-weight:600;">
+            Upload ảnh chuyển khoản <span class="required">*</span>
+        </label>
+        <input type="file" name="anhChuyenKhoan" id="anhChuyenKhoan" accept="image/*" 
+               style="width:100%; padding:10px; border:2px dashed #ddd; border-radius:8px; background:#fff;">
+        <small style="color:#666; display:block; margin-top:5px;">
+            Định dạng: JPG, PNG | Tối đa 5MB
+        </small>
+    </div>
+</div>
                 <div class="order-total-box">
                     <div class="total-row">
                         <span>Tạm tính:</span>
@@ -216,6 +245,44 @@
         </div>
     </div>
 </div>
+                        
+<!-- THÊM JS MỚI SAU </form> -->
+<script>
+document.getElementById('paymentMethod').addEventListener('change', function() {
+    const bankInfo = document.getElementById('bankTransferInfo');
+    const fileInput = document.getElementById('anhChuyenKhoan');
+    if (this.value === 'Bank') {
+        bankInfo.style.display = 'block';
+        fileInput.setAttribute('required', 'required');
+    } else {
+        bankInfo.style.display = 'none';
+        fileInput.removeAttribute('required');
+    }
+});
+
+// Tự động sinh mã đơn tạm (để hiển thị nội dung chuyển khoản)
+document.addEventListener('DOMContentLoaded', function() {
+    const maDon = 'DH' + new Date().getTime();
+    document.getElementById('maDonContent').textContent = maDon;
+    // Trigger change để ẩn/hiện nếu mặc định là COD
+    document.getElementById('paymentMethod').dispatchEvent(new Event('change'));
+});
+
+// Validate file
+document.getElementById('anhChuyenKhoan').addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Ảnh tối đa 5MB!');
+            this.value = '';
+        }
+        if (!['image/jpeg', 'image/png'].includes(file.type)) {
+            alert('Chỉ chấp nhận JPG, PNG!');
+            this.value = '';
+        }
+    }
+});
+</script>
 
 <style>
 /* CSS CỦA BẠN (GIỮ NGUYÊN) */

@@ -67,7 +67,7 @@
 
 
                     <div class="cart-quantity">
-                        <button type="button" class="qty-btn" onclick="updateQuantity(${item.product.maSP}, -1, ${item.product.soLuong})">-</button>
+                        <button style = "color:black;" type="button" class="qty-btn" onclick="updateQuantity(${item.product.maSP}, -1, ${item.product.soLuong})">-</button>
                         <input type="number" 
                                id="qty-${item.product.maSP}" 
                                value="${item.soLuong}" 
@@ -75,7 +75,7 @@
                                readonly
                                data-price="${(item.product.phanTramGiam > 0 ? item.product.giaKhuyenMai : item.product.gia)}"
                                data-stock="${item.product.soLuong}">
-                        <button type="button" class="qty-btn" onclick="updateQuantity(${item.product.maSP}, 1, ${item.product.soLuong})">+</button>
+                        <button style = "color:black;" type="button" class="qty-btn" onclick="updateQuantity(${item.product.maSP}, 1, ${item.product.soLuong})">+</button>
                     </div>
 
                     <div class="cart-total">
@@ -473,12 +473,17 @@ document.addEventListener('DOMContentLoaded', function() {
 .qty-btn {
     width: 30px;
     height: 30px;
-    border: 1px solid #ddd;
-    background: white;
+    border: 1px solid var(--border-color, #ddd);
+    background: var(--white);
     cursor: pointer;
-    border-radius: 3px;
-    font-size: 1.2em;
-    transition: all 0.2s;
+    border-radius: var(--border-radius-sm, 3px);
+    font-size: 1.2em; /* Giữ kích thước ký tự to */
+    transition: all var(--transition-fast, 0.2s);
+    display: flex;
+    align-items: center;      /* Căn giữa theo chiều dọc */
+    justify-content: center;  /* Căn giữa theo chiều ngang */
+    padding: 0;               /* Xóa padding mặc định của button */
+    line-height: 1;           /* Đảm bảo line-height không làm hỏng flex */
 }
 .qty-btn:hover {
     background: #e9ecef;

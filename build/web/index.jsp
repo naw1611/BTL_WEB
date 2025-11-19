@@ -73,11 +73,11 @@
         transform: translateY(-2px);
     }
     .btn-add-to-cart {
-        background: var(--main-color);
+        background: #0066cc;
         color: white;
     }
     .btn-add-to-cart:hover {
-        background: var(--main-hover);
+        background: #0066cc;
         transform: translateY(-2px);
     }
     .swiper-button-next,
@@ -121,22 +121,12 @@
 
                     <c:if test="${not empty sessionScope.user}">
                 <div class="product-actions">
-
-                    <!-- ✅ BUY NOW - chuyển trực tiếp sang thanh toán -->
-                    <button class="btn-buy-now" onclick="buyNow(${product.maSP})">
-                        ⚡ Mua Ngay
-                    </button>
-
-                    <!-- ✅ ADD TO CART -->
-                    <button class="btn-add-to-cart" onclick="addToCart(${product.maSP},1)">
-                        🛒 Thêm vào giỏ
-                    </button>
-                </div>
+                <button class="btn-buy-now" onclick="buyNow(${product.maSP})">⚡ Mua Ngay</button>
+                <button class="btn-add-to-cart" onclick="addToCart(${product.maSP},1)">🛒 Thêm vào giỏ</button>
+            </div>
             </c:if>
                     <c:if test="${empty sessionScope.user}">
-                        <a href="login" class="btn-add-to-cart" style="text-decoration: none; text-align:center; display:block; padding:10px;">
-                            🔒 Đăng nhập để mua
-                        </a>
+                        <a href="login" class="btn-login-required">🔒 Đăng nhập để mua</a>
                     </c:if>
                 </div>
             </div>
@@ -210,22 +200,12 @@
     </a>
                     <c:if test="${not empty sessionScope.user}">
                 <div class="product-actions">
-
-                    <!-- ✅ BUY NOW - chuyển trực tiếp sang thanh toán -->
-                    <button class="btn-buy-now" onclick="buyNow(${product.maSP})">
-                        ⚡ Mua Ngay
-                    </button>
-
-                    <!-- ✅ ADD TO CART -->
-                    <button class="btn-add-to-cart" onclick="addToCart(${product.maSP},1)">
-                        🛒 Thêm vào giỏ
-                    </button>
-                </div>
+                <button class="btn-buy-now" onclick="buyNow(${product.maSP})">⚡ Mua Ngay</button>
+                <button class="btn-add-to-cart" onclick="addToCart(${product.maSP},1)">🛒 Thêm vào giỏ</button>
+            </div>
             </c:if>
                     <c:if test="${empty sessionScope.user}">
-                        <a href="login" class="btn-add-to-cart" style="text-decoration: none; text-align:center; display:block; padding:10px;">
-                            🔒 Đăng nhập để mua
-                        </a>
+                        <a href="login" class="btn-login-required">🔒 Đăng nhập để mua</a>
                     </c:if>
                 </div>
             </div>

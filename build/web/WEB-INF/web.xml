@@ -230,6 +230,15 @@
     <servlet-name>AdminKhuyenMaiServlet</servlet-name>
     <url-pattern>/adminKhuyenMai</url-pattern>
 </servlet-mapping>
+<servlet>
+        <servlet-name>DeleteKhuyenMaiServlet</servlet-name>
+        <servlet-class>com.sportsshop.servlet.DeleteKhuyenMaiServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DeleteKhuyenMaiServlet</servlet-name>
+        <url-pattern>/DeleteKhuyenMaiServlet</url-pattern> 
+    </servlet-mapping>
 
     <servlet>
     <servlet-name>AdminContactServlet</servlet-name>

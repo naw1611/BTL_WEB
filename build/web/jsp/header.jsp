@@ -11,12 +11,47 @@
 </head>
 <body>
     <div class="page-wrapper">
-        <div class="banner">
-            <img src="<%= request.getContextPath() %>/images/logo.jpg" alt="Sports Shop Logo" style="width: 100px;">
+        <div class="header-content-wrapper"> <div class="logo-container">
+        <img src="<%= request.getContextPath() %>/images/logo.jpg" alt="Sports Shop Logo">
+    </div>
+    
+    <div class="hotline-container">
+            <div class="social-icons">
+                <a href="#" title="Facebook" class="social-icon fb"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" title="Twitter" class="social-icon tw"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="Instagram" class="social-icon ig"><i class="fab fa-instagram"></i></a> 
+            </div>
+            
+            <div class="hotline-text">
+                Hotline: <strong>0936 237 723</strong>
+            </div>
         </div>
+    
+    <div class="service-icons-container">
         
-        <div class="top-menu">
-            <ul>
+            <div class="service-item">
+                <img src="<%= request.getContextPath() %>/images/icon-gia.png" alt="Giá tốt nhất">
+                <div class="service-text">
+                </div>
+            </div>
+            
+            <div class="service-item">
+                <img src="<%= request.getContextPath() %>/images/icon-baohanh.png" alt="Bảo hành chính hãng">
+                <div class="service-text">
+                </div>
+            </div>
+            
+            <div class="service-item">
+                <img src="<%= request.getContextPath() %>/images/icon-giaohang.png" alt="Giao hàng toàn quốc">
+                <div class="service-text">
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+<div class="top-menu">
+    <ul>
                 <li><a href="<%= request.getContextPath() %>/index"><i class="fas fa-home"></i> Trang Chủ</a></li>
                 <li><a href="<%= request.getContextPath() %>/products"><i class="fas fa-tshirt"></i> Sản Phẩm</a></li>
                 
