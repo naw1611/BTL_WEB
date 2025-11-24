@@ -71,24 +71,29 @@ public class OrderDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                order = new Order();
-                order.setMaDon(rs.getInt("MaDon"));
-                order.setMaUser(rs.getInt("MaUser")); // Lưu MaUser
-                order.setNgayDat(rs.getTimestamp("NgayDat"));
-                order.setTongTien(rs.getDouble("TongTien"));
-                order.setTrangThai(rs.getString("TrangThai"));
-                order.setDiaChiGiao(rs.getString("DiaChiGiao"));
-                order.setSdt(rs.getString("SDT"));
-                order.setTenNguoiNhan(rs.getString("TenNguoiNhan"));
+    order = new Order();
+    order.setMaDon(rs.getInt("MaDon"));
+    order.setMaUser(rs.getInt("MaUser"));
+    order.setNgayDat(rs.getTimestamp("NgayDat"));
+    order.setTongTien(rs.getDouble("TongTien"));
+    order.setTrangThai(rs.getString("TrangThai"));
+    order.setDiaChiGiao(rs.getString("DiaChiGiao"));
+    order.setSdt(rs.getString("SDT"));
+    order.setTenNguoiNhan(rs.getString("TenNguoiNhan"));
 
-                // Tạo đối tượng User (từ bảng 'users') và gán vào Order
-                User user = new User();
-                user.setMaUser(rs.getInt("MaUser"));
-                user.setFullName(rs.getString("FullName"));
-                user.setEmail(rs.getString("Email"));
-                
-                order.setUser(user); // Gán User vào Order
-            }
+    // ⭐ THÊM 2 DÒNG NÀY
+    order.setPhuongThucThanhToan(rs.getString("PhuongThucThanhToan"));
+    order.setAnhChuyenKhoan(rs.getString("AnhChuyenKhoan"));
+
+    // Load User
+    User user = new User();
+    user.setMaUser(rs.getInt("MaUser"));
+    user.setFullName(rs.getString("FullName"));
+    user.setEmail(rs.getString("Email"));
+
+    order.setUser(user);
+}
+
         } catch (Exception e) {
             e.printStackTrace();
         }

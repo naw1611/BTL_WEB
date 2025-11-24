@@ -26,45 +26,6 @@
             <p class="thank-you">Cảm ơn bạn đã mua hàng tại <strong>Sports Shop</strong>!</p>
             <p class="contact-info">Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất để xác nhận đơn hàng.</p>
  
-<c:if test="${sessionScope.phuongThucThanhToan == 'Chuyển khoản'}">
-    <div class="bank-transfer-guide">
-        <h3 style="color:#0066cc; text-align:left; margin:25px 0 15px;">
-            Hướng dẫn chuyển khoản
-        </h3>
-        <div style="background:#f8f9fa; padding:20px; border-radius:10px; border:1px solid #e9ecef; text-align:left;">
-            <table style="width:100%; font-size:0.95em; line-height:1.8;">
-                <tr>
-                    <td style="width:35%; font-weight:600; color:#333;">Ngân hàng:</td>
-                    <td><strong>Vietcombank</strong></td>
-                </tr>
-                <tr>
-                    <td style="font-weight:600; color:#333;">Số tài khoản:</td>
-                    <td><code style="background:#eee; padding:4px 8px; border-radius:4px; font-family:monospace; font-size:1.1em;">
-                        1234 5678 9012
-                    </code></td>
-                </tr>
-                <tr>
-                    <td style="font-weight:600; color:#333;">Chủ tài khoản:</td>
-                    <td><strong>NGUYỄN VĂN A</strong></td>
-                </tr>
-                <tr>
-                    <td style="font-weight:600; color:#333;">Nội dung chuyển khoản:</td>
-                    <td>
-                        <div style="background:#fff3cd; padding:10px; border-radius:6px; border:1px solid #ffeaa7; font-weight:bold; font-family:monospace;">
-                            #${maOrder}
-                        </div>
-                        <small style="color:#e74c3c; display:block; margin-top:5px;">
-                            Vui lòng ghi đúng nội dung để xác nhận nhanh
-                        </small>
-                    </td>
-                </tr>
-            </table>
-            <div style="margin-top:20px; padding:15px; background:#e3f2fd; border-radius:8px; font-size:0.9em; color:#1976d2;">
-                <strong>Lưu ý:</strong> Chúng tôi sẽ xác nhận đơn hàng trong vòng <strong>24 giờ</strong> sau khi nhận được tiền. Vui lòng giữ lại biên lai.
-            </div>
-        </div>
-    </div>
-</c:if>
             <div class="success-actions">
     <a href="${pageContext.request.contextPath}/products" class="btn-continue">🛍️ Tiếp tục mua sắm</a>
     <a href="${pageContext.request.contextPath}/order?action=view" class="btn-view-orders">📦 Xem đơn hàng của tôi</a>

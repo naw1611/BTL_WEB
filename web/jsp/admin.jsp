@@ -89,51 +89,73 @@
 
     <c:if test="${not empty orders}">
         <table border="1" cellspacing="0" cellpadding="6" style="width:100%; border-collapse:collapse; text-align:center;">
-            <thead style="background-color:#f2f2f2;">
-                <tr>
-                    <th>Mã Đơn</th>
-                    <th>Khách Hàng</th>
-                    <th>Ngày Đặt</th>
-                    <th>Tổng Tiền</th>
-                    <th>Địa Chỉ Giao</th>
-                    <th>Trạng Thái</th>
-                    <th>Hành Động</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="order" items="${orders}">
-                    <tr>
-                        <td>${order.maDon}</td>
-                        <td>${order.user.fullName}</td>
-                        <td><fmt:formatDate value="${order.ngayDat}" pattern="dd/MM/yyyy HH:mm"/></td>
-                        <td><fmt:formatNumber value="${order.tongTien}" type="number"/> VNĐ</td>
-                        <td>${order.diaChiGiao}</td>
+    <thead style="background-color:#f2f2f2;">
+        <tr>
+            <th>Mã Đơn</th>
+            <th>Khách Hàng</th>
+            <th>Ngày Đặt</th>
+            <th>Tổng Tiền</th>
+            <th>Địa Chỉ Giao</th>
+            <th>Thanh Toán</th> <!-- ⭐ THÊM CỘT NÀY -->
+            <th>Trạng Thái</th>
+            <th>Hành Động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <c:forEach var="order" items="${orders}">
+            <tr>
+                <td>${order.maDon}</td>
+                <td>${order.user.fullName}</td>
+                <td><fmt:formatDate value="${order.ngayDat}" pattern="dd/MM/yyyy HH:mm"/></td>
+                <td><fmt:formatNumber value="${order.tongTien}" type="number"/> VNĐ</td>
+                <td>${order.diaChiGiao}</td>
+                
+                <!-- ⭐ THÊM PHẦN NÀY ĐỂ HIỂN THỊ PHƯƠNG THỨC THANH TOÁN VÀ ẢNH -->
+                <td>
+                    <c:choose>
+                        <c:when test="${order.phuongThucThanhToan == 'Chuyển khoản'}">
+                            <span style="color:#28a745; font-weight:bold;">🏦 Chuyển khoản</span>
+                            <c:if test="${not empty order.anhChuyenKhoan}">
+                                <br>
+                                <span style="background:#28a745; color:white; padding:3px 8px; border-radius:4px; font-size:0.85em;">
+                                    ✓ Có ảnh
+                                </span>
+                            </c:if>
+                        </c:when>
+                        <c:when test="${order.phuongThucThanhToan == 'VNPAY'}">
+                            <span style="color:#0066cc; font-weight:bold;">💳 VNPAY</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="color:#6c757d; font-weight:bold;">💵 COD</span>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
 
-                        <td>
-                            <c:choose>
-                                <c:when test="${order.trangThai == 'Đã giao hàng'}">
-                                    <span style="color:green; font-weight:bold;">Đã giao hàng</span>
-                                </c:when>
-                                <c:when test="${order.trangThai == 'Đang giao hàng'}">
-                                    <span style="color:blue;">Đang giao hàng</span>
-                                </c:when>
-                                <c:when test="${order.trangThai == 'Đã hủy'}">
-                                    <span style="color:red; text-decoration: line-through;">Đã hủy</span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span style="color:#6c757d;">${order.trangThai}</span>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
+                <td>
+                    <c:choose>
+                        <c:when test="${order.trangThai == 'Đã giao hàng'}">
+                            <span style="color:green; font-weight:bold;">Đã giao hàng</span>
+                        </c:when>
+                        <c:when test="${order.trangThai == 'Đang giao hàng'}">
+                            <span style="color:blue;">Đang giao hàng</span>
+                        </c:when>
+                        <c:when test="${order.trangThai == 'Đã hủy'}">
+                            <span style="color:red; text-decoration: line-through;">Đã hủy</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span style="color:#6c757d;">${order.trangThai}</span>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
 
-                        <td>
-                            <a href="admin?action=detail&maDon=${order.maDon}">Chi tiết</a> |
-                            <a href="admin?action=print&maDon=${order.maDon}" target="_blank">In</a>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                <td>
+                    <a href="admin?action=detail&maDon=${order.maDon}">Chi tiết</a> |
+                    <a href="admin?action=print&maDon=${order.maDon}" target="_blank">In</a>
+                </td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
     </c:if>
 
     <c:if test="${not empty message}">

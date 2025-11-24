@@ -4,20 +4,20 @@ import java.util.Date;
 
 public class Order {
     private int maDon;
-    private int maUser; // ✅ Bổ sung: Ánh xạ trực tiếp cột MaUser (int)
-    private User user;  // Giữ lại: Dùng khi cần lấy thông tin chi tiết User
+    private int maUser;
+    private User user;
     private Date ngayDat;
     private double tongTien;
     private String diaChiGiao;
     private String trangThai;
-    private String sdt; // ✅ Bổ sung
-    private String tenNguoiNhan; // ✅ Bổ sung
-
-    public String getEmail() {
-        return user != null ? user.getEmail() : "";
-    }
+    private String sdt;
+    private String tenNguoiNhan;
     
-    // Getters and Setters
+    // ⭐ THÊM 2 THUỘC TÍNH NÀY
+    private String phuongThucThanhToan;
+    private String anhChuyenKhoan;
+    
+    // Getters and Setters cũ (giữ nguyên)
     public int getMaDon() { return maDon; }
     public void setMaDon(int maDon) { this.maDon = maDon; }
     
@@ -38,11 +38,31 @@ public class Order {
     
     public String getTrangThai() { return trangThai; }
     public void setTrangThai(String trangThai) { this.trangThai = trangThai; }
-
-    // ✅ Getters/Setters cho các trường mới
+    
     public String getSdt() { return sdt; }
     public void setSdt(String sdt) { this.sdt = sdt; }
-
+    
     public String getTenNguoiNhan() { return tenNguoiNhan; }
     public void setTenNguoiNhan(String tenNguoiNhan) { this.tenNguoiNhan = tenNguoiNhan; }
+    
+    public String getEmail() {
+        return user != null ? user.getEmail() : "";
+    }
+    
+    // ⭐ THÊM GETTER/SETTER CHO 2 THUỘC TÍNH MỚI
+    public String getPhuongThucThanhToan() {
+        return phuongThucThanhToan;
+    }
+    
+    public void setPhuongThucThanhToan(String phuongThucThanhToan) {
+        this.phuongThucThanhToan = phuongThucThanhToan;
+    }
+    
+    public String getAnhChuyenKhoan() {
+        return anhChuyenKhoan;
+    }
+    
+    public void setAnhChuyenKhoan(String anhChuyenKhoan) {
+        this.anhChuyenKhoan = anhChuyenKhoan;
+    }
 }

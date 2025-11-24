@@ -97,7 +97,12 @@
         <div class="customer-info">
             <h3>📋 Thông tin giao hàng</h3>
             
-            <form action="order" method="POST" class="order-form" id="checkoutForm">
+            <form action="order" 
+      method="POST" 
+      enctype="multipart/form-data"
+      class="order-form" 
+      id="checkoutForm">
+
                 
                 <c:choose>
                     <c:when test="${isBuyNowCheckout}">

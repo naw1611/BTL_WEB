@@ -71,8 +71,9 @@ request.setAttribute("listDanhMuc", listDanhMuc);
         }
     }
 
-    private void listOrders(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    // ===== SỬA HÀM listOrders() =====
+private void listOrders(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
     List<Order> orders = new ArrayList<>();
 
     String orderId = request.getParameter("orderId");
@@ -83,6 +84,7 @@ request.setAttribute("listDanhMuc", listDanhMuc);
     List<Object> params = new ArrayList<>();
     StringBuilder sql = new StringBuilder(
             "SELECT d.MaDon, d.NgayDat, d.TongTien, d.DiaChiGiao, d.TrangThai, " +
+                    "d.PhuongThucThanhToan, d.AnhChuyenKhoan, " + // ⭐ THÊM 2 CỘT NÀY
                     "u.MaUser, u.FullName, u.Email, u.SoDienThoai " +
                     "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser WHERE 1=1 ");
 
@@ -107,7 +109,6 @@ request.setAttribute("listDanhMuc", listDanhMuc);
     try (Connection conn = DatabaseConnection.getConnection();
          PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
         
-        // Gán parameters
         for (int i = 0; i < params.size(); i++) {
             stmt.setObject(i + 1, params.get(i));
         }
@@ -120,6 +121,10 @@ request.setAttribute("listDanhMuc", listDanhMuc);
             order.setTongTien(rs.getDouble("TongTien"));
             order.setDiaChiGiao(rs.getString("DiaChiGiao"));
             order.setTrangThai(rs.getString("TrangThai"));
+            
+            // ⭐ THÊM 2 DÒNG NÀY
+            order.setPhuongThucThanhToan(rs.getString("PhuongThucThanhToan"));
+            order.setAnhChuyenKhoan(rs.getString("AnhChuyenKhoan"));
 
             User user = new User();
             user.setMaUser(rs.getInt("MaUser"));
@@ -140,73 +145,79 @@ request.setAttribute("listDanhMuc", listDanhMuc);
     request.getRequestDispatcher("jsp/admin.jsp").forward(request, response);
 }
 
-    private void showOrderDetail(HttpServletRequest request, HttpServletResponse response, String action)
-            throws ServletException, IOException {
-        int maDon = Integer.parseInt(request.getParameter("maDon"));
-        Order order = null;
-        List<OrderDetail> orderDetails = new ArrayList<>();
+// ===== SỬA HÀM showOrderDetail() =====
+private void showOrderDetail(HttpServletRequest request, HttpServletResponse response, String action)
+        throws ServletException, IOException {
+    int maDon = Integer.parseInt(request.getParameter("maDon"));
+    Order order = null;
+    List<OrderDetail> orderDetails = new ArrayList<>();
 
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement(
-                    "SELECT d.MaDon, d.NgayDat, d.TongTien, d.DiaChiGiao, d.TrangThai, " +
-                            "u.MaUser, u.FullName, u.Email, u.SoDienThoai " +
-                            "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser WHERE d.MaDon = ?");
-            stmt.setInt(1, maDon);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                order = new Order();
-                order.setMaDon(rs.getInt("MaDon"));
-                order.setNgayDat(rs.getTimestamp("NgayDat"));
-                order.setTongTien(rs.getDouble("TongTien"));
-                order.setDiaChiGiao(rs.getString("DiaChiGiao"));
-                order.setTrangThai(rs.getString("TrangThai"));
+    try (Connection conn = DatabaseConnection.getConnection()) {
+        PreparedStatement stmt = conn.prepareStatement(
+                "SELECT d.MaDon, d.NgayDat, d.TongTien, d.DiaChiGiao, d.TrangThai, " +
+                        "d.PhuongThucThanhToan, d.AnhChuyenKhoan, " + // ⭐ THÊM 2 CỘT NÀY
+                        "u.MaUser, u.FullName, u.Email, u.SoDienThoai " +
+                        "FROM DonHang d JOIN Users u ON d.MaUser = u.MaUser WHERE d.MaDon = ?");
+        stmt.setInt(1, maDon);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            order = new Order();
+            order.setMaDon(rs.getInt("MaDon"));
+            order.setNgayDat(rs.getTimestamp("NgayDat"));
+            order.setTongTien(rs.getDouble("TongTien"));
+            order.setDiaChiGiao(rs.getString("DiaChiGiao"));
+            order.setTrangThai(rs.getString("TrangThai"));
+            
+            // ⭐ THÊM 2 DÒNG NÀY
+            order.setPhuongThucThanhToan(rs.getString("PhuongThucThanhToan"));
+            order.setAnhChuyenKhoan(rs.getString("AnhChuyenKhoan"));
 
-                User user = new User();
-                user.setMaUser(rs.getInt("MaUser"));
-                user.setFullName(rs.getString("FullName"));
-                user.setEmail(rs.getString("Email"));
-                user.setSoDienThoai(rs.getString("SoDienThoai"));
-                order.setUser(user);
-            }
-
-            stmt = conn.prepareStatement(
-                    "SELECT cd.MaChiTiet, cd.MaDon, cd.SoLuong, cd.DonGia, " +
-                            "sp.MaSP, sp.TenSP, sp.CodeSP, sp.Gia, sp.HinhAnh " +
-                            "FROM ChiTietDonHang cd JOIN SanPham sp ON cd.MaSP = sp.MaSP WHERE cd.MaDon = ?");
-            stmt.setInt(1, maDon);
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                OrderDetail detail = new OrderDetail();
-                detail.setMaChiTiet(rs.getInt("MaChiTiet"));
-                detail.setMaDon(rs.getInt("MaDon"));
-                detail.setSoLuong(rs.getInt("SoLuong"));
-                detail.setDonGia(rs.getDouble("DonGia"));
-
-                Product product = new Product();
-                product.setMaSP(rs.getInt("MaSP"));
-                product.setTenSP(rs.getString("TenSP"));
-                product.setCodeSP(rs.getString("CodeSP"));
-                product.setGia(rs.getDouble("Gia"));
-                product.setHinhAnh(rs.getString("HinhAnh"));
-                detail.setProduct(product);
-
-                orderDetails.add(detail);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("message", "Lỗi khi lấy chi tiết đơn hàng!");
-            request.setAttribute("messageType", "error");
+            User user = new User();
+            user.setMaUser(rs.getInt("MaUser"));
+            user.setFullName(rs.getString("FullName"));
+            user.setEmail(rs.getString("Email"));
+            user.setSoDienThoai(rs.getString("SoDienThoai"));
+            order.setUser(user);
         }
 
-        request.setAttribute("order", order);
-        request.setAttribute("orderDetails", orderDetails);
+        stmt = conn.prepareStatement(
+                "SELECT cd.MaChiTiet, cd.MaDon, cd.SoLuong, cd.DonGia, " +
+                        "sp.MaSP, sp.TenSP, sp.CodeSP, sp.Gia, sp.HinhAnh " +
+                        "FROM ChiTietDonHang cd JOIN SanPham sp ON cd.MaSP = sp.MaSP WHERE cd.MaDon = ?");
+        stmt.setInt(1, maDon);
+        rs = stmt.executeQuery();
+        while (rs.next()) {
+            OrderDetail detail = new OrderDetail();
+            detail.setMaChiTiet(rs.getInt("MaChiTiet"));
+            detail.setMaDon(rs.getInt("MaDon"));
+            detail.setSoLuong(rs.getInt("SoLuong"));
+            detail.setDonGia(rs.getDouble("DonGia"));
 
-        if ("print".equals(action)) {
-            request.getRequestDispatcher("jsp/order-print.jsp").forward(request, response);
-        } else {
-            request.getRequestDispatcher("jsp/order-detail.jsp").forward(request, response);
+            Product product = new Product();
+            product.setMaSP(rs.getInt("MaSP"));
+            product.setTenSP(rs.getString("TenSP"));
+            product.setCodeSP(rs.getString("CodeSP"));
+            product.setGia(rs.getDouble("Gia"));
+            product.setHinhAnh(rs.getString("HinhAnh"));
+            detail.setProduct(product);
+
+            orderDetails.add(detail);
         }
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("message", "Lỗi khi lấy chi tiết đơn hàng!");
+        request.setAttribute("messageType", "error");
     }
+
+    request.setAttribute("order", order);
+    request.setAttribute("orderDetails", orderDetails);
+
+    if ("print".equals(action)) {
+        request.getRequestDispatcher("jsp/order-print.jsp").forward(request, response);
+    } else {
+        request.getRequestDispatcher("jsp/order-detail.jsp").forward(request, response);
+    }
+}
 
     private void exportExcel(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
